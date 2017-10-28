@@ -39,7 +39,23 @@ class Timer{
       return this.timeout_in_secs
     var currentTimestamp = this.getTimestampInSecs()
     var secsGone = currentTimestamp - this.timestampOnStart
+    var secsLeft = this.timeout_in_secs - secsGone
+    if (secsLeft <=0 && (secsLeft % 30 == 0)) {
+      this.is_show ? '' : alert(this.getMotivationSlogan());
+      this.is_show = true;
+    } else {
+      this.is_show = false;
+    }
     return Math.max(this.timeout_in_secs - secsGone, 0)
+  }
+  getMotivationSlogan() {
+    var slogans = ['Вы читаете сайт уже достаточно долго',
+                   'Работа не волк, никуда не убежит, поэтому делать её надо',
+                   'Пора за работу, надо опять спасать мир',
+                   'Успели уже узнать что-то полезное?',
+                   'Доведёт ли прокрастинация до добра?']
+    var index = Math.round(Math.random() * slogans.length)
+    return slogans[index];
   }
 }
 
@@ -56,7 +72,7 @@ class TimerWidget{
     // adds HTML tag to current page
     this.timerContainer = document.createElement('div')
 
-    this.timerContainer.setAttribute("style", "height: 100px;")
+    this.timerContainer.setAttribute("style", "height:100px;position:fixed;top:10px;right:60px;width:10px;z-index:5;display:block;")
     this.timerContainer.innerHTML = TEMPLATE
 
     rootTag.insertBefore(this.timerContainer, rootTag.firstChild)
@@ -76,6 +92,7 @@ class TimerWidget{
       return
     this.timerContainer.remove()
     this.timerContainer = this.minutes_element = this.seconds_element = null
+
   }
 }
 
@@ -107,6 +124,7 @@ function main(){
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   document.addEventListener("visibilitychange", handleVisibilityChange, false);
   handleVisibilityChange()
+
 }
 
 // initialize timer when page ready for presentation

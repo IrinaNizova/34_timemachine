@@ -1,4 +1,5 @@
-var TIMEOUT_IN_SECS = 3 * 60
+var TIMEOUT_IN_SECS = 3 * 3
+var SHOW_NOTIFICATIONS_TIMEOUT = 30000
 var TEMPLATE = '<h1><span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></h1>'
 
 function padZero(number){
@@ -39,23 +40,8 @@ class Timer{
       return this.timeout_in_secs
     var currentTimestamp = this.getTimestampInSecs()
     var secsGone = currentTimestamp - this.timestampOnStart
-    var secsLeft = this.timeout_in_secs - secsGone
-    if (secsLeft <=0 && (secsLeft % 30 == 0)) {
-      this.is_show ? '' : alert(this.getMotivationSlogan());
-      this.is_show = true;
-    } else {
-      this.is_show = false;
-    }
+
     return Math.max(this.timeout_in_secs - secsGone, 0)
-  }
-  getMotivationSlogan() {
-    var slogans = ['Вы читаете сайт уже достаточно долго',
-                   'Работа не волк, никуда не убежит, поэтому делать её надо',
-                   'Пора за работу, надо опять спасать мир',
-                   'Успели уже узнать что-то полезное?',
-                   'Доведёт ли прокрастинация до добра?']
-    var index = Math.round(Math.random() * slogans.length)
-    return slogans[index];
   }
 }
 
@@ -86,6 +72,7 @@ class TimerWidget{
 
     this.minutes_element.innerHTML = padZero(minutes)
     this.seconds_element.innerHTML = padZero(seconds)
+    console.log(minutes + ' - ' + seconds)
   }
   unmount(){
     if (!this.timerContainer)
@@ -107,6 +94,9 @@ function main(){
 
   function handleIntervalTick(){
     var secsLeft = timer.calculateSecsLeft()
+    if (secsLeft == 1){
+       setTimeout(showMotivationSlogan , 100);
+     }
     timerWiget.update(secsLeft)
   }
 
@@ -120,6 +110,22 @@ function main(){
       intervalId = intervalId || setInterval(handleIntervalTick, 300)
     }
   }
+
+  function getMotivationSlogan() {
+    var slogans = ['Вы читаете сайт уже достаточно долго',
+                   'Работа не волк, никуда не убежит, поэтому делать её надо',
+                   'Пора за работу, надо опять спасать мир',
+                   'Успели уже узнать что-то полезное?',
+                   'Доведёт ли прокрастинация до добра?']
+    var index = Math.floor(Math.random() * slogans.length)
+    return slogans[index];
+  }
+
+  function showMotivationSlogan() {
+     alert(getMotivationSlogan())
+     setTimeout(showMotivationSlogan, SHOW_NOTIFICATIONS_TIMEOUT);
+   }
+
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Page_Visibility_API
   document.addEventListener("visibilitychange", handleVisibilityChange, false);

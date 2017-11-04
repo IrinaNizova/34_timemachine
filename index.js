@@ -1,4 +1,4 @@
-var TIMEOUT_IN_SECS = 3 * 3
+var TIMEOUT_IN_SECS = 3 * 60
 var SHOW_NOTIFICATIONS_TIMEOUT = 30000
 var TEMPLATE = '<h1><span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></h1>'
 

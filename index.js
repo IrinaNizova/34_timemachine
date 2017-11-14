@@ -41,7 +41,7 @@ class Timer{
     var currentTimestamp = this.getTimestampInSecs()
     var secsGone = currentTimestamp - this.timestampOnStart
 
-    return Math.max(this.timeout_in_secs - secsGone, 0)
+    return this.timeout_in_secs - secsGone
   }
 }
 
@@ -72,7 +72,6 @@ class TimerWidget{
 
     this.minutes_element.innerHTML = padZero(minutes)
     this.seconds_element.innerHTML = padZero(seconds)
-    console.log(minutes + ' - ' + seconds)
   }
   unmount(){
     if (!this.timerContainer)
@@ -94,10 +93,10 @@ function main(){
 
   function handleIntervalTick(){
     var secsLeft = timer.calculateSecsLeft()
-    if (secsLeft == 1){
-       setTimeout(showMotivationSlogan , 100);
+    if (secsLeft <=0 && secsLeft % 30 == 0){
+       showMotivationSlogan();
      }
-    timerWiget.update(secsLeft)
+    timerWiget.update(secsLeft>=0 ? secsLeft : 0)
   }
 
   function handleVisibilityChange(){
@@ -122,8 +121,7 @@ function main(){
   }
 
   function showMotivationSlogan() {
-     alert(getMotivationSlogan())
-     setTimeout(showMotivationSlogan, SHOW_NOTIFICATIONS_TIMEOUT);
+     alert(getMotivationSlogan());
    }
 
 
